@@ -1,0 +1,705 @@
+/* ================================================
+   Password Generator — css/style.css
+   ================================================
+   Table of contents:
+     1.  Reset & CSS custom properties
+     2.  Dark-mode overrides
+     3.  Base / body
+     4.  Layout wrapper
+     5.  Nav bar (language toggle)
+     6.  App heading
+     7.  Tabs
+     8.  Output field
+     9.  Strength meter
+    10.  Options card
+    11.  Toggle switch
+    12.  Range slider & select
+    13.  Generate button
+    14.  Copy feedback toast
+    15.  History section
+    16.  SVG icon helper
+    17.  Responsive — mobile (≤ 480 px)
+   ================================================ */
+
+
+/* ------------------------------------------------
+   1. RESET & CSS CUSTOM PROPERTIES
+   ------------------------------------------------ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* — Brand — */
+  --accent:          #534AB7;   /* primary violet */
+  --accent-dark:     #3C3489;   /* violet hover    */
+  --accent-light:    #EEEDFE;   /* violet tint     */
+
+  /* — Strength-level colours — */
+  --c-very-weak:     #E24B4A;   /* red   */
+  --c-weak:          #BA7517;   /* amber */
+  --c-fair:          #3B6D11;   /* green */
+  --c-strong:        #0F6E56;   /* teal  */
+
+  /* — Surfaces — */
+  --bg-page:         #F5F5F3;
+  --bg-card:         #FFFFFF;
+  --bg-output:       #F1EFE8;
+  --bg-hist:         #FFFFFF;
+
+  /* — Text — */
+  --text-primary:    #1A1A1A;
+  --text-secondary:  #6B6B68;
+  --text-hint:       #9E9D99;
+
+  /* — Borders — */
+  --border:          rgba(0, 0, 0, 0.12);
+  --border-strong:   rgba(0, 0, 0, 0.25);
+
+  /* — Typography — */
+  --font-sans:       system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:       'Menlo', 'Consolas', 'Monaco', 'Courier New', monospace;
+
+  /* — Radii — */
+  --r-sm:            6px;
+  --r-md:            8px;
+  --r-lg:            12px;
+
+  /* — Transitions — */
+  --ease:            0.18s ease;
+}
+
+
+/* ------------------------------------------------
+   2. DARK-MODE OVERRIDES
+   Triggered automatically by the OS/browser setting.
+   ------------------------------------------------ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page:        #1A1A1C;
+    --bg-card:        #242428;
+    --bg-output:      #2C2C30;
+    --bg-hist:        #2C2C30;
+    --text-primary:   #F0EFE8;
+    --text-secondary: #A8A7A2;
+    --text-hint:      #686763;
+    --border:         rgba(255, 255, 255, 0.10);
+    --border-strong:  rgba(255, 255, 255, 0.22);
+  }
+}
+
+
+/* ------------------------------------------------
+   3. BASE / BODY
+   ------------------------------------------------ */
+
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  min-height: 100vh;
+  padding: 0 1rem 3rem;
+}
+
+
+/* ------------------------------------------------
+   4. LAYOUT WRAPPER
+   Centers the app card and constrains its width.
+   ------------------------------------------------ */
+
+.pg-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.pg {
+  width: 100%;
+  max-width: 520px;
+}
+
+
+/* ------------------------------------------------
+   5. NAV BAR — language toggle
+   ------------------------------------------------ */
+
+.pg-nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem 0 0.75rem;
+}
+
+/* Language toggle pill */
+.lang-toggle {
+  display: flex;
+  gap: 0;
+  border: 0.5px solid var(--border);
+  border-radius: 20px;       /* full-pill shape */
+  overflow: hidden;
+  background: var(--bg-card);
+}
+
+/* Individual language option button */
+.lang-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  letter-spacing: 0.03em;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--ease), color var(--ease);
+}
+
+/* Active language: filled accent */
+.lang-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.lang-btn:not(.active):hover {
+  background: var(--bg-output);
+}
+
+
+/* ------------------------------------------------
+   6. APP HEADING
+   ------------------------------------------------ */
+
+.pg-heading {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.pg-heading .icon {
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+}
+
+
+/* ------------------------------------------------
+   7. TABS — Password / Passphrase
+   ------------------------------------------------ */
+
+.pg-tabs {
+  display: flex;
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.pg-tab {
+  flex: 1;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--ease), color var(--ease);
+}
+
+/* Active tab: filled accent background */
+.pg-tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.pg-tab:not(.active):hover {
+  background: var(--bg-output);
+}
+
+
+/* ------------------------------------------------
+   8. OUTPUT FIELD — displays the generated password
+   ------------------------------------------------ */
+
+.pg-output {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-output);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  min-height: 64px;
+}
+
+/*
+ * Password text — monospace so every character has equal width,
+ * which makes it easier to read and manually type passwords.
+ */
+.pg-pass {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-primary);
+  word-break: break-all;
+  flex: 1;
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+}
+
+/*
+ * Passphrase text — switch back to sans-serif because passphrases
+ * are normal words meant to be read fluently.
+ */
+.pg-pass.pg-phrase {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+/* Group of icon buttons to the right of the output */
+.pg-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Square icon button (show/hide, copy, regenerate) */
+.pg-btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: none;
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--ease), border-color var(--ease), color var(--ease);
+}
+
+.pg-btn-icon:hover {
+  background: var(--bg-output);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.pg-btn-icon:active {
+  transform: scale(0.95);
+}
+
+
+/* ------------------------------------------------
+   9. STRENGTH METER
+   Four coloured bars + a text label.
+   ------------------------------------------------ */
+
+/* Bar container */
+.pg-meter {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 5px;
+}
+
+/*
+ * Individual bar — colour is set via JS (bar.style.background).
+ * Default is the neutral border colour.
+ */
+.pg-bar {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+
+/* Text label beneath the bars ("Strong", "Weak", …) */
+.pg-slabel {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: right;
+  margin-bottom: 1rem;
+  min-height: 16px;
+}
+
+
+/* ------------------------------------------------
+   10. OPTIONS CARD
+   White card containing all toggles and sliders.
+   ------------------------------------------------ */
+
+.pg-card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+/* Option row: label group on the left, control on the right */
+.pg-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.pg-row:last-child  { border-bottom: none; padding-bottom: 0; }
+.pg-row:first-child { padding-top: 0; }
+
+/* Range-slider row — different alignment from checkbox rows */
+.pg-rrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+
+/* Primary label text in a row */
+.pg-lbl {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Hint / subtitle beneath the label */
+.pg-sub {
+  font-size: 11px;
+  color: var(--text-hint);
+  margin-top: 1px;
+}
+
+
+/* ------------------------------------------------
+   11. TOGGLE SWITCH
+   Visual-only replacement for a native checkbox.
+   The hidden <input> still handles state & a11y.
+   ------------------------------------------------ */
+
+.pg-toggle {
+  position: relative;
+  width: 38px;
+  height: 20px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* Hide the native checkbox — state is still accessible */
+.pg-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+/* Pill track */
+.pg-knob {
+  position: absolute;
+  inset: 0;
+  background: var(--border-strong);
+  border-radius: 10px;
+  transition: background var(--ease);
+}
+
+/* Sliding circle */
+.pg-knob::before {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  top: 3px;
+  left: 3px;
+  transition: transform var(--ease);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+
+/* ON state: accent colour + circle shifts right */
+.pg-toggle input:checked + .pg-knob {
+  background: var(--accent);
+}
+
+.pg-toggle input:checked + .pg-knob::before {
+  transform: translateX(18px);
+}
+
+/* Keyboard focus ring */
+.pg-toggle input:focus-visible + .pg-knob {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+/* ------------------------------------------------
+   12. RANGE SLIDER & SELECT
+   ------------------------------------------------ */
+
+input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Keep the slider label from squishing */
+.pg-lbl[for="pg-len"],
+.pg-lbl[for="pg-words"] {
+  white-space: nowrap;
+  min-width: 82px;
+}
+
+/* Numeric value displayed to the right of the slider */
+.pg-rval {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  min-width: 24px;
+  text-align: right;
+}
+
+/* Separator <select> */
+select {
+  font-size: 12px;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--bg-output);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 5px 8px;
+  cursor: pointer;
+  outline: none;
+  width: 120px;
+}
+
+select:focus {
+  border-color: var(--accent);
+}
+
+
+/* ------------------------------------------------
+   13. GENERATE BUTTON
+   ------------------------------------------------ */
+
+.pg-generate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 11px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  border: none;
+  border-radius: var(--r-md);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--ease), transform 0.1s;
+}
+
+.pg-generate:hover  { background: var(--accent-dark); }
+.pg-generate:active { transform: scale(0.98); }
+
+.pg-generate .icon {
+  width: 16px;
+  height: 16px;
+}
+
+
+/* ------------------------------------------------
+   14. COPY FEEDBACK TOAST
+   Fades in for 2 s after a successful clipboard write.
+   ------------------------------------------------ */
+
+.pg-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--c-strong);
+  opacity: 0;
+  transition: opacity 0.3s;
+  margin-top: 8px;
+  min-height: 20px;
+}
+
+.pg-feedback .icon {
+  width: 14px;
+  height: 14px;
+}
+
+
+/* ------------------------------------------------
+   15. HISTORY SECTION
+   ------------------------------------------------ */
+
+/* Section header: title left, "Clear all" right */
+.pg-hist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.pg-hist-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.pg-hist-title .icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* "Clear all" link-style button */
+.pg-hist-clear {
+  font-size: 12px;
+  font-family: var(--font-sans);
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--ease);
+}
+
+.pg-hist-clear:hover { color: var(--c-very-weak); }
+
+/* List wrapper */
+.pg-hist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Single history row */
+.pg-hist-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-hist);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 7px 12px;
+}
+
+/* Password text — truncated with ellipsis */
+.pg-hist-pass {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Passphrase variant — readable sans-serif */
+.pg-hist-pass.pg-hist-phrase {
+  font-family: var(--font-sans);
+}
+
+/* Timestamp (HH:MM) */
+.pg-hist-meta {
+  font-size: 11px;
+  color: var(--text-hint);
+  flex-shrink: 0;
+}
+
+/* "pass" / "phrase" type badge */
+.pg-hist-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+/* Row copy button */
+.pg-hist-copy {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-hint);
+  padding: 0;
+  flex-shrink: 0;
+  transition: color var(--ease);
+}
+
+.pg-hist-copy:hover { color: var(--accent); }
+
+.pg-hist-copy .icon {
+  width: 15px;
+  height: 15px;
+}
+
+/* Empty-state placeholder */
+.pg-empty {
+  font-size: 13px;
+  color: var(--text-hint);
+  text-align: center;
+  padding: 1.25rem 0;
+}
+
+
+/* ------------------------------------------------
+   16. SVG ICON HELPER
+   Inline SVG <use> icons inherit colour from parent.
+   ------------------------------------------------ */
+
+.icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+
+/* ------------------------------------------------
+   17. RESPONSIVE — mobile (≤ 480 px)
+   ------------------------------------------------ */
+
+@media (max-width: 480px) {
+  body { padding: 0 0.75rem 3rem; }
+
+  /* Slightly smaller monospace on narrow screens */
+  .pg-pass { font-size: 12px; }
+
+  /*
+   * On very narrow viewports the slider label wraps to its own line
+   * so the thumb + value have full width to breathe.
+   */
+  .pg-rrow { flex-wrap: wrap; }
+
+  .pg-lbl[for="pg-len"],
+  .pg-lbl[for="pg-words"] {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+}
